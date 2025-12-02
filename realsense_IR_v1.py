@@ -127,5 +127,17 @@ cv2.imwrite(os.path.join(out_dir, "ir_right_0000.png"), ir_right_rgb)
 with open(os.path.join(out_dir, "ir_intrinsics.json"), "w") as f:
     json.dump(K_left, f, indent=2)
 
+# ====== 保存 IR(left) → Color 外参 ======
+extr_ir2color = ir_left_frame.profile.get_extrinsics_to(color_frame.profile)
+R_ir2color = np.array(extr_ir2color.rotation).reshape(3, 3)
+t_ir2color = np.array(extr_ir2color.translation).reshape(3, 1)
+
+extr_dict = {
+    "R": R_ir2color.tolist(),   # 3x3
+    "t": t_ir2color.tolist(),   # 3x1
+}
+with open(os.path.join(out_dir, "ir2color_extrinsics.json"), "w") as f:
+    json.dump(extr_dict, f, indent=2)
+
 pipeline.stop()
 print("Saved images, intrinsics and point cloud to:", out_dir)
