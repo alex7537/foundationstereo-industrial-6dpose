@@ -36,6 +36,9 @@ for _ in range(30):
 frames = pipeline.wait_for_frames()
 aligned = align.process(frames)
 
+# raw color（给 FS 对齐用）
+color_raw_frame = frames.get_color_frame()
+# aligned color + depth（给 RealSense 点云用）
 color_frame = aligned.get_color_frame()
 depth_frame = aligned.get_depth_frame()
 
@@ -46,6 +49,7 @@ if not color_frame or not depth_frame:
     raise RuntimeError("No frames received")
 
 # 3. 转成 numpy
+color_raw     = np.asanyarray(color_raw_frame.get_data())      # HxWx3, BGR
 color = np.asanyarray(color_frame.get_data())       # HxWx3, uint8 (BGR)
 depth = np.asanyarray(depth_frame.get_data())       # HxW, uint16
 ir_left  = np.asanyarray(ir_left_frame.get_data())  # HxW, uint8
@@ -64,6 +68,8 @@ print("Depth shape:", depth.shape)
 
 intr_left = ir_left_frame.profile.as_video_stream_profile().intrinsics
 intr_right = ir_right_frame.profile.as_video_stream_profile().intrinsics
+
+
 
 # stereo baseline (单位：米)
 extr = ir_left_frame.profile.get_extrinsics_to(ir_right_frame.profile)
@@ -87,9 +93,21 @@ print("Baseline = ", baseline)
 # =============================
 
 # 使用对齐到 color 的 depth，对应的内参也用 color 相机的
-intr_color = color_frame.profile.as_video_stream_profile().intrinsics
-fx, fy = intr_color.fx, intr_color.fy
-cx, cy = intr_color.ppx, intr_color.ppy
+intr_color_raw = color_raw_frame.profile.as_video_stream_profile().intrinsics
+fx, fy = intr_color_raw.fx, intr_color_raw.fy
+cx, cy = intr_color_raw.ppx, intr_color_raw.ppy
+
+# ⭐ 新增：保存 Color 相机内参
+K_color = {
+    "width":  intr_color_raw.width,
+    "height": intr_color_raw.height,
+    "fx":     intr_color_raw.fx,
+    "fy":     intr_color_raw.fy,
+    "cx":     intr_color_raw.ppx,
+    "cy":     intr_color_raw.ppy,
+}
+with open(os.path.join(out_dir, "color_intrinsics.json"), "w") as f:
+    json.dump(K_color, f, indent=2)
 
 # depth 转米
 z = depth.astype(np.float32) * depth_scale  # HxW, float32 (meters)
@@ -118,6 +136,10 @@ print(f"RealSense point cloud saved to: {ply_path}")
 print("Valid points:", pts.shape[0])
 
 # 5. 保存图像和 IR 内参
+
+# 给 FS IR→RGB 对齐用的原始 RGB
+cv2.imwrite(os.path.join(out_dir, "color_raw_0000.png"), color_raw)
+
 cv2.imwrite(os.path.join(out_dir, "color_0000.png"), color)
 cv2.imwrite(os.path.join(out_dir, "depth_0000.png"), depth)           # uint16, 原始depth
 cv2.imwrite(os.path.join(out_dir, "ir_left_0000.png"), ir_left_rgb)
@@ -128,7 +150,7 @@ with open(os.path.join(out_dir, "ir_intrinsics.json"), "w") as f:
     json.dump(K_left, f, indent=2)
 
 # ====== 保存 IR(left) → Color 外参 ======
-extr_ir2color = ir_left_frame.profile.get_extrinsics_to(color_frame.profile)
+extr_ir2color = ir_left_frame.profile.get_extrinsics_to(color_raw_frame.profile)
 R_ir2color = np.array(extr_ir2color.rotation).reshape(3, 3)
 t_ir2color = np.array(extr_ir2color.translation).reshape(3, 1)
 
