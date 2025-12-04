@@ -12,8 +12,12 @@ os.makedirs(out_dir, exist_ok=True)
 pipeline = rs.pipeline()
 config = rs.config()
 
+# ⭐ 新增：指定使用哪一台 RealSense（这台是你用来做 IR+Color+Depth 的那台）
+serial_ir_cam = "923322072633"          # ← 换成你真实的序列号
+config.enable_device(serial_ir_cam)
+
 # 分辨率可以按需改，后面最好和你算法一致
-W, H = 1280, 720
+W, H = 640, 480
 config.enable_stream(rs.stream.color, W, H, rs.format.bgr8, 30)
 config.enable_stream(rs.stream.depth, W, H, rs.format.z16, 30)
 config.enable_stream(rs.stream.infrared, 1, W, H, rs.format.y8, 30)  # 左 IR
@@ -49,7 +53,7 @@ if not color_frame or not depth_frame:
     raise RuntimeError("No frames received")
 
 # 3. 转成 numpy
-color_raw     = np.asanyarray(color_raw_frame.get_data())      # HxWx3, BGR
+color_raw = np.asanyarray(color_raw_frame.get_data())      # HxWx3, BGR
 color = np.asanyarray(color_frame.get_data())       # HxWx3, uint8 (BGR)
 depth = np.asanyarray(depth_frame.get_data())       # HxW, uint16
 ir_left  = np.asanyarray(ir_left_frame.get_data())  # HxW, uint8

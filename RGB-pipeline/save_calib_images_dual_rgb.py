@@ -5,8 +5,8 @@ import cv2
 import os
 
 # 两个 D435 的序列号（用 rs-enumerate-devices 查）
-LEFT_SERIAL = "xxxxxxxxxxxx"    # 左 D435
-RIGHT_SERIAL = "yyyyyyyyyyyy"   # 右 D435
+LEFT_SERIAL = "923322072633"    # 左 D435
+RIGHT_SERIAL = "727212070348"   # 右 D435
 
 W, H = 640, 480
 FPS = 15

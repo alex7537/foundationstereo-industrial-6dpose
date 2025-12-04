@@ -100,28 +100,14 @@ color = cv2.imread(os.path.join(out_dir, "color_raw_0000.png"), cv2.IMREAD_COLOR
 # =========================================================
 # 3. 读取 FoundationStereo 输出的 disparity/depth
 # =========================================================
-disp = np.load(fs_disp_path)            # HxW, float32
-assert disp.shape == (K_ir["height"], K_ir["width"])
+disp = np.load(fs_disp_path).astype(np.float32)    # HxW, float32 / 这里已经是深度了，而不是视差（在run.demo里转换过了）
 
-# 🔍 在这里加这三行调试输出
-print("FS depth shape:", disp.shape)
-print("Color image shape:", color.shape)
-print("IR intrinsic resolution:", K_ir["width"], K_ir["height"])
-print("Color intrinsic resolution:", K_color["width"], K_color["height"])
-
-
-# disparity → depth（米）
-fx_ir = K_ir["fx"]
-baseline = K_ir["baseline_m"]          # 你在 ir_intrinsics.json 里存过
-depth_ir_fs_m = np.zeros_like(disp, dtype=np.float32)
-valid_disp = disp > 0
-depth_ir_fs_m[valid_disp] = fx_ir * baseline / disp[valid_disp]
 
 # =========================================================
 # 4. 做 IR→RGB 对齐 + 点云输出
 # =========================================================
 depth_color_from_fs, pts_color_fs, cols_color_fs = project_ir_depth_to_color(
-    depth_ir_m=depth_ir_fs_m,
+    depth_ir_m=disp,
     K_ir=K_ir,
     K_color=K_color,
     R_ir2color=R_ir2color,
