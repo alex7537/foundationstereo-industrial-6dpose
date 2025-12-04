@@ -13,7 +13,7 @@ pipeline = rs.pipeline()
 config = rs.config()
 
 # 分辨率可以按需改，后面最好和你算法一致
-W, H = 640, 480
+W, H = 1280, 720
 config.enable_stream(rs.stream.color, W, H, rs.format.bgr8, 30)
 config.enable_stream(rs.stream.depth, W, H, rs.format.z16, 30)
 config.enable_stream(rs.stream.infrared, 1, W, H, rs.format.y8, 30)  # 左 IR
