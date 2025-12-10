@@ -5,11 +5,11 @@ import os
 
 # ================== 用户需要改的部分 ==================
 # 两个 D435 的序列号（rs-enumerate-devices 看）
-LEFT_SERIAL = "xxxxxxxxxxxx"    # 左 D435
-RIGHT_SERIAL = "yyyyyyyyyyyy"   # 右 D435
+LEFT_SERIAL = "923322072633"    # 左 D435
+RIGHT_SERIAL = "727212070348"   # 右 D435
 
 # 分辨率：要和标定时一致！
-W, H = 640, 480
+W, H = 1280, 720
 FPS = 30
 
 # 标定结果文件

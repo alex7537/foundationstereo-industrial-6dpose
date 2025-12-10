@@ -4,7 +4,7 @@ import os
 
 CALIB_FILE = "stereo_calib_rgb.npz"            # 你的 npz
 FS_ASSETS_DIR = "/home/match/FS/FoundationStereo/assets"
-OUT_K_PATH = os.path.join(FS_ASSETS_DIR, "K_d435.txt")
+OUT_K_PATH = os.path.join(FS_ASSETS_DIR, "K_d435_2RGB.txt")
 
 def main():
     calib = np.load(CALIB_FILE)

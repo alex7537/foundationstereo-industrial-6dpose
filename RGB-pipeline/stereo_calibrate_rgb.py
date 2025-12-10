@@ -5,11 +5,11 @@ import numpy as np
 import cv2
 
 IMAGE_DIR = "stereo_calib_images_rgb"
-W, H = 640, 480  # 分辨率，和采集时一致
+W, H = 1280, 720  # 分辨率，和采集时一致
 
 # 棋盘格参数
 CHESSBOARD = (9, 6)    # (列数, 行数) 内角点
-SQUARE_SIZE = 0.025    # 米
+SQUARE_SIZE = 0.026    # 米
 
 CALIB_OUT = "stereo_calib_rgb.npz"
 

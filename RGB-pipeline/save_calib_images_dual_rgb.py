@@ -8,7 +8,7 @@ import os
 LEFT_SERIAL = "923322072633"    # 左 D435
 RIGHT_SERIAL = "727212070348"   # 右 D435
 
-W, H = 640, 480
+W, H = 1280, 720
 FPS = 15
 
 OUT_DIR = "stereo_calib_images_rgb"
