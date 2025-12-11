@@ -17,7 +17,6 @@ python realsense_IR_v1.py   （也无所谓 这里也得到了并更新了内参
 
 python make_K_txt_from_json.py 
 
-cp /home/match/FS/rs_test_output/* FoundationStereo/shared_fs_test/  拷贝图片
 
 cd FoundationStereo \
 conda activate foundation_stereo
