@@ -5,12 +5,12 @@ import os
 
 # ================== 用户需要改的部分 ==================
 # 两个 D435 的序列号（rs-enumerate-devices 看）
-LEFT_SERIAL = "923322072633"    # 左 D435
-RIGHT_SERIAL = "727212070348"   # 右 D435
+LEFT_SERIAL = "727212070348"    # 左 D435
+RIGHT_SERIAL = "923322072633"   # 右 D435
 
 # 分辨率：要和标定时一致！
 W, H = 1280, 720
-FPS = 30
+FPS = 15
 
 # 标定结果文件
 CALIB_FILE = "stereo_calib_rgb.npz"
