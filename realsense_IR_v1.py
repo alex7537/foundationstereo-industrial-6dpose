@@ -5,7 +5,7 @@ import json
 import os
 import open3d as o3d   # ⭐ 新增：用于保存点云
 
-out_dir = "rs_test_output"
+out_dir = "FoundationStereo/shared_fs_test"
 os.makedirs(out_dir, exist_ok=True)
 
 # 1. 配置并启动管线
@@ -17,7 +17,7 @@ serial_ir_cam = "923322072633"          # ← 换成你真实的序列号
 config.enable_device(serial_ir_cam)
 
 # 分辨率可以按需改，后面最好和你算法一致
-W, H = 640, 480
+W, H = 1280, 720
 config.enable_stream(rs.stream.color, W, H, rs.format.bgr8, 30)
 config.enable_stream(rs.stream.depth, W, H, rs.format.z16, 30)
 config.enable_stream(rs.stream.infrared, 1, W, H, rs.format.y8, 30)  # 左 IR
@@ -134,7 +134,7 @@ pcd_rs = o3d.geometry.PointCloud()
 pcd_rs.points = o3d.utility.Vector3dVector(pts)
 pcd_rs.colors = o3d.utility.Vector3dVector(cols)
 
-ply_path = os.path.join(out_dir, "cloud_rs_capture.ply")
+ply_path = os.path.join(out_dir, "cloud_rs_original.ply")
 o3d.io.write_point_cloud(ply_path, pcd_rs)
 print(f"RealSense point cloud saved to: {ply_path}")
 print("Valid points:", pts.shape[0])
