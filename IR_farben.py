@@ -210,6 +210,15 @@ def main():
         print("Z-buffer selection kept no points. Check inputs.")
         return
 
+
+    # =========================================================
+    # ✅ Save RGB-aligned depth as 16-bit PNG in millimeters
+    # depth_color_m: float32 meters, 0 means invalid
+    # =========================================================
+    depth_mm = np.clip(depth_color_m * 1000.0, 0, 65535).astype(np.uint16)
+    cv2.imwrite(depth_png_out, depth_mm)
+    print("Saved RGB-aligned depth (16-bit mm):", depth_png_out)
+
     # 1) 深度范围裁剪（按你实验距离改）
     z = pts_keep[:, 2]
     mask = (z > 0.1) & (z < 2.0)   # 例如只保留 10cm~2m
