@@ -25,9 +25,11 @@ conda activate foundation_stereo
 python scripts/run_demo.py --left_file ./shared_fs_test/ir_left_0000.png --right_file ./shared_fs_test/ir_right_0000.png --ckpt_dir ./pretrained_models/model_best_bp2.pth --out_dir ./outputs_test --intrinsic_file ./shared_fs_test/K_ir_fs.txt  
 
 
-cd ~/foundationstereo-industrial-6dpose
-cp /home/match/Downloads/depth_meter.npy /home/match/FS/FoundationStereo/shared_fs_test/
-python IR_farben.py 
+cd ~/foundationstereo-industrial-6dpose 
+
+cp /home/match/Downloads/depth_meter.npy /home/match/FS/FoundationStereo/shared_fs_test/ 
+
+    python IR_farben.py 
 ------------------------------------------------
 
 stereo demo的 运行 得到 depth_meter.npy	
